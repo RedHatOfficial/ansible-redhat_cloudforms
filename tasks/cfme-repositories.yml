@@ -1,0 +1,8 @@
+- name: CFME | Disable All Repositories
+  command: "subscription-manager repos --disable='*'"
+  become: True
+
+- name: CFME | Enable Required Repositories
+  command: "subscription-manager repos --enable='{{ item }}'"
+  with_items: "{{ cfme_repositories }}"
+  become: True
