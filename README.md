@@ -11,6 +11,7 @@ Performs a migration from CFME 5.7 to 5.8 utilizing steps from [Migrating to Red
 * Appliances have already been backed up per [General Configuration Section 4.4.5.1](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.5/html/general_configuration/configuration#backing-up-and-restoring-a-database).
 * Disks have already been resized.
 * Environments are not utilizing database replication.
+* Appliances have had memory increased to 12Gb for CloudForms 4.5 and newer appliances per requirement.
 
 #### Required groups
 * cfme
