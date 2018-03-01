@@ -83,28 +83,6 @@
         name: rh-postgresql95-postgresql
         state: restarted
 
-- name: CFME | Migrate | 5.8 to 5.9 | Check Schema
-  hosts: cfme-appliances
-  become: True
-  gather_facts: False
-  tasks:
-    - name: CFME | Migrate | Check DB Schema
-      block:
-        - name: CFME | Migrate | rake evm:db:check_schema
-          shell: "cd /var/www/miq/vmdb; rake evm:db:check_schema | tee /var/tmp/evm_check_schema.out"
-          register: evm_db_check_schema_cmd
-          changed_when: False
-          async: 3600
-          poll: 60
-    
-        # Using assert module due to bug in async/poll. https://github.com/ansible/ansible/issues/32472
-        - name: CFME | Migrate | Assert evm:db:check_schema result
-          assert:
-            that: "evm_db_check_schema_cmd.rc == 0 and 'The local schema is consistent with schema.yml' in evm_db_check_schema_cmd.stdout"
-      run_once: True
-      tags:
-        - evm_check_schema
-
 - name: CFME | Migrate | 5.8 to 5.9 | Restart evmserverd
   hosts: cfme-appliances
   become: True
