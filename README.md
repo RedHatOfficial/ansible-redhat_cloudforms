@@ -19,7 +19,7 @@ Performs a migration from CFME 5.7 to 5.8 utilizing steps from [Migrating to Red
 * cfme-databases
 
 ### migrate-5-8-to-5-9.yml
-Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red Hat CloudForms 4.6 Beta](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6-beta/html/migrating_to_red_hat_cloudforms_4.6_beta/).  This playbook does not currently perform a backup, resize the disks or handle database replication scenarios.
+Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red Hat CloudForms 4.6](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/migrating_to_red_hat_cloudforms_4.6/).  This playbook does not currently perform a backup, resize the disks or handle database replication scenarios.
 
 #### Assumptions
 * Appliances have already been backed up per [General Configuration Section 4.4.5.1](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.5/html/general_configuration/configuration#backing-up-and-restoring-a-database).

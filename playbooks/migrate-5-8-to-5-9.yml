@@ -14,6 +14,7 @@
           - rhel-server-rhscl-7-rpms
           - rhel-7-server-satellite-tools-6.2-rpms
           - rhel-7-server-rhn-tools-rpms
+          - rhel-7-server-extras-rpms
 
 - name: CFME | Migrate | 5.8 to 5.9 | Appliances Specific Preparation
   hosts: cfme-appliances
