@@ -1,0 +1,65 @@
+- name: CFME | OS Update and Upgrade | All Preparation
+  hosts: cfme
+  become: True
+  gather_facts: True
+  tasks:
+    - name: CFME | OS Update and Upgrade | Repositories
+      include_tasks: tasks/cfme-repositories.yml
+      vars:
+        cfme_repositories:
+          - rhel-7-server-rpms
+          - cf-me-5.9-for-rhel-7-rpms
+          - rhel-7-server-optional-rpms
+          - rhel-7-server-supplementary-rpms
+          - rhel-server-rhscl-7-rpms
+          - rhel-7-server-satellite-tools-6.2-rpms
+          - rhel-7-server-rhn-tools-rpms
+          - rhel-7-server-extras-rpms
+
+- name: CFME | OS Update and Upgrade | Appliances Specific Preparation
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | OS Update and Upgrade | Stop evmserverd
+      service:
+        name: evmserverd
+        state: stopped
+
+- name: CFME | OS Update and Upgrade | DB Specific Preparation
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | OS Update and Upgrade | Stop postgres
+      service:
+        name: rh-postgresql95-postgresql
+        state: stopped
+
+- name: CFME | OS Update and Upgrade | Update Packages
+  hosts: cfme
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | OS Update and Upgrade | Update all packages to latest | Include Tasks
+      include_tasks: tasks/os-update-and-upgrade.yml
+
+- name: CFME | OS Update and Upgrade | Start postgresql
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | OS Update and Upgrade | Start postgres
+      service:
+        name: rh-postgresql95-postgresql
+        state: started
+
+- name: CFME | OS Update and Upgrade | Start evmserverd
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | OS Update and Upgrade | Start evmserverd
+      service:
+        name: evmserverd
+        state: started

@@ -4,7 +4,7 @@
   gather_facts: True
   tasks:
     - name: CFME | Migrate | Repositories
-      include: tasks/cfme-repositories.yml
+      include_tasks: tasks/cfme-repositories.yml
       vars:
         cfme_repositories:
           - rhel-7-server-rpms
