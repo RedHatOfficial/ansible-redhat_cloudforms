@@ -8,7 +8,7 @@
       vars:
         cfme_repositories:
           - rhel-7-server-rpms
-          - cf-me-5.8-for-rhel-7-rpms
+          - "cf-me-{{ ansible_local['cfme_major_version']['cfme_major_version'] }}-for-rhel-7-rpms"
           - rhel-7-server-optional-rpms
           - rhel-7-server-supplementary-rpms
           - rhel-server-rhscl-7-rpms

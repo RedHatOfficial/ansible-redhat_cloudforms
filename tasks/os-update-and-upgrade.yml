@@ -15,5 +15,3 @@
     
     - name: CFME | Update OS | Include Tasks for Host Reboot
       include_tasks: tasks/reboot.yml
-      vars:
-        reboot_only_if_needed: False

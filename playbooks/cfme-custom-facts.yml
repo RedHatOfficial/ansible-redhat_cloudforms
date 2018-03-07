@@ -1,0 +1,16 @@
+---
+- name: CFME | Custom Facts
+  hosts: cfme
+  become: True
+  gather_facts: False
+  tasks:
+  - name: CFME | Custom Facts | Create /etc/ansible/facts.d
+    file:
+      state=directory
+      recurse=yes
+      path=/etc/ansible/facts.d
+  - name: CFME | Custom Facts | CFME Major Version
+    copy:
+      src: "files/cfme_major_version.fact"
+      dest: /etc/ansible/facts.d/
+      mode: 0744
