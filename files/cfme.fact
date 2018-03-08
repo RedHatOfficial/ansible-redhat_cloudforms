@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+cfme_package = `rpm -q cfme`
+matches      = /cfme-(([[:digit:]]*).([[:digit:]]*).([[:digit:]]*).([[:digit:]]*)-([[:digit:]]*))\..*/.match(cfme_package)
+
+cfme = {
+  'cfme_version'             => matches[1],
+  'cfme_version_product'     => "#{matches[2]}.#{matches[3]}",
+  'cfme_version_major'       => matches[2],
+  'cfme_version_minor'       => matches[3],
+  'cfme_version_patch'       => matches[4],
+  'cfme_version_build'       => matches[5],
+  'cfme_version_rpm_release' => matches[6]
+}
+
+puts cfme.to_json

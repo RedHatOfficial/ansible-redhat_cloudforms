@@ -1,0 +1,31 @@
+---
+- name: CFME | Configure Repositories | Install Custom Facts
+  include_tasks: tasks/install-custom-facts.yml
+
+- name: CFME | Configure Repositories | Disable All
+  command: "subscription-manager repos --disable='*'"
+  become: True
+
+- name: CFME | Configure Repositories | Set CFME Product Version
+  set_fact:
+    cfme_version_product: "{{ ansible_local['cfme']['cfme_version_product'] }}"
+  when: cfme_version_product is not defined
+
+- name: CFME | Configure Repositories | Set Required Repositories
+  set_fact:
+    cfme_repositories:
+      - rhel-7-server-rpms
+      - rhel-server-rhscl-7-rpms
+      - rhel-7-server-extras-rpms
+      - "cf-me-{{ cfme_version_product }}-for-rhel-7-rpms"
+
+- name: CFME | Configure Repositories | Enable Required Repositories
+  command: "subscription-manager repos --enable='{{ item }}'"
+  with_items: "{{ cfme_repositories }}"
+  become: True
+
+- name: CFME | Configure Repositories | Enable Additional Repositories
+  command: "subscription-manager repos --enable='{{ item }}'"
+  with_items: "{{ cfme_addiitonal_repositories }}"
+  become: True
+  when: cfme_addiitonal_repositories is defined

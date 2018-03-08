@@ -1,0 +1,8 @@
+---
+- name: CFME | Install Custom Facts
+  hosts: cfme
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Install Custom Facts | Include Tasks
+      include_tasks: tasks/custom-facts.yml

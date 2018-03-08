@@ -1,0 +1,8 @@
+---
+- name: CFME | Update Packages
+  package:
+    name: '*'
+    state: latest
+    
+- name: CFME | Update Packages | Include Tasks for Host Reboot
+  include_tasks: tasks/host-reboot.yml

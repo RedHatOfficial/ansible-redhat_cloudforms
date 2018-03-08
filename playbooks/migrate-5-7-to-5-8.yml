@@ -4,16 +4,9 @@
   gather_facts: True
   tasks:
     - name: CFME | Migrate | Repositories
-      include_tasks: tasks/cfme-repositories.yml
+      include_tasks: tasks/configure-repositories.yml
       vars:
-        cfme_repositories:
-          - rhel-7-server-rpms
-          - cf-me-5.8-for-rhel-7-rpms
-          - rhel-7-server-optional-rpms
-          - rhel-7-server-supplementary-rpms
-          - rhel-server-rhscl-7-rpms
-          - rhel-7-server-satellite-tools-6.2-rpms
-          - rhel-7-server-rhn-tools-rpms
+        cfme_version_product: 5.8
 
 - name: CFME | Migrate | 5.7 to 5.8 | Appliances Specific Preparation
   hosts: cfme-appliances
@@ -112,4 +105,4 @@
     - name: CFME | Migrate | Restart evmserverd
       service:
         name: evmserverd
-        state: restart
+        state: restarted
