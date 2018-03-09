@@ -1,3 +1,4 @@
+---
 - name: CFME | Rolling Update | All Preparation
   hosts: cfme
   become: True
@@ -14,37 +15,22 @@
       changed_when: packages_need_update_result.rc == 100
       failed_when: packages_need_update_result.rc != 0 and packages_need_update_result.rc != 100
 
-- name: CFME | Rolling Update | Update Packages
-  hosts: cfme
+- name: CFME | Rolling Update | Update Databases
+  hosts: cfme-databases
   become: True
   gather_facts: False
   serial: 1
   tasks:
-    - block:
-        - name: CFME | Rolling Update | Stop evmserverd
-          service:
-            name: evmserverd
-            state: stopped
-          when: "'cfme-appliances' in group_names"
+    - name: CFME | Rolling Update | Include Tasks for Updating Packages
+      include_tasks: tasks/update-packages.yml
+      when: packages_need_update_result | changed
 
-        - name: CFME | Rolling Update | Stop postgres
-          service:
-            name: rh-postgresql95-postgresql
-            state: stopped
-          when: "'cfme-databases' in group_names"
-
-        - name: CFME | Rolling Update | Include Tasks for Updating Packages
-          include_tasks: tasks/update-packages.yml
-
-        - name: CFME | Rolling Update | Start postgres
-          service:
-            name: rh-postgresql95-postgresql
-            state: started
-          when: "'cfme-databases' in group_names"
-
-        - name: CFME | Rolling Update | Start evmserverd
-          service:
-            name: evmserverd
-            state: started
-          when: "'cfme-appliances' in group_names"
+- name: CFME | Rolling Update | Update Appliances
+  hosts: cfme-appliances:!cfme-databases
+  become: True
+  gather_facts: False
+  serial: 1
+  tasks:
+    - name: CFME | Rolling Update | Include Tasks for Updating Packages
+      include_tasks: tasks/update-packages.yml
       when: packages_need_update_result | changed

@@ -1,8 +1,33 @@
 ---
-- name: CFME | Update Packages
+- name: CFME | Update Packages | Stop evmserverd
+  service:
+    name: evmserverd
+    state: stopped
+  when: "'cfme-appliances' in group_names"
+
+- name: CFME | Update Packages | Stop postgres
+  service:
+    name: rh-postgresql95-postgresql
+    state: stopped
+  when: "'cfme-databases' in group_names"
+
+- name: CFME | Update Packages | Latest
   package:
     name: '*'
     state: latest
     
 - name: CFME | Update Packages | Include Tasks for Host Reboot
   include_tasks: tasks/host-reboot.yml
+
+- name: CFME | Update Packages | Start postgres
+  service:
+    name: rh-postgresql95-postgresql
+    state: started
+  when: "'cfme-databases' in group_names"
+
+- name: CFME | Update Packages | Start evmserverd
+  service:
+    name: evmserverd
+    state: started
+  when: "'cfme-appliances' in group_names"
+
