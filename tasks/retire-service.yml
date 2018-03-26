@@ -1,0 +1,41 @@
+---
+# @param cfme_api_uri     URI to the CFME API to get the Service Teamplate from
+# @param cfme_auth_token  Auth token to authenticate with CFME with
+# @param cfme_service_ids IDs of the Service(s) to retire
+
+- name: CFME | Retire Service | Validate Variables
+  assert:
+    that:
+      - "cfme_api_uri is defined"
+      - "cfme_auth_token is defined"
+      - "cfme_service_ids is defined"
+
+- name: CFME | Retire Services
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/services/{{ item }}"
+    method: POST
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+    body_format: 'json'
+    body:
+      action: "retire"
+  register: cfme_retire_services_result
+  with_items: "{{ cfme_service_ids }}"
+
+- name: CFME | Wait for Services to Retire
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/services/{{ item }}"
+    method: GET
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+  register: cfme_services_status_result
+  with_items: "{{ cfme_service_ids }}"
+  until: cfme_services_status_result['json']['retired'] == true
+  retries: 60
+  delay: 60

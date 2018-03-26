@@ -1,0 +1,53 @@
+---
+# @param cfme_api_uri               URI to teh CFME API to get the Service Teamplate from
+# @param cfme_auth_token            Auth token to authenticate with CFME with
+# @param cfme_service_catalog_name  Name of the Service Catalog that the Service Teamplate belongs to
+# @param cfme_service_template_name Name of the Service Template to Get
+#
+# @set cfme_service_catalog_id    ID of the Service Catalog that contains the requested Service Teamplate
+# @set cfme_service_template      Hash describing the requested Service Template
+# @set cfme_service_template_id   ID of the requested Service Template
+# @set cfme_service_template_href HREF for the Service Teamplte
+
+- name: CFME | Get Service Template | Validate Variables
+  assert:
+    that:
+      - "cfme_api_uri is defined"
+      - "cfme_auth_token is defined"
+      - "cfme_service_catalog_name is defined"
+      - "cfme_service_template_name is defined"
+
+- name: CFME | Get Service Template | Get Service Catalog
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/service_catalogs?expand=resources&attributes=id,href&filter[]=name={{ cfme_service_catalog_name | urlencode() }}"
+    method: GET
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+  register: cfme_service_catalog_result
+
+- name: CFME | Get Service Template |  Set Service Catalog ID and HREF
+  set_fact:
+    cfme_service_catalog_id: "{{ cfme_service_catalog_result['json']['resources'][0]['id'] }}"
+    cfme_service_catalog_href: "{{ cfme_service_catalog_result['json']['resources'][0]['href'] }}"
+
+- name: CFME | Get Service Template | Request Service Template
+  local_action:
+    module: uri
+    url: "{{ cfme_service_catalog_href }}/service_templates?expand=resources&attributes=id&filter[]=name={{ cfme_service_template_name | urlencode() }}"
+    method: GET
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+  register: cfme_service_tempalte_result
+
+- name: CFME | Get Service Template | Set Service Template Facts
+  set_fact:
+    cfme_service_template: "{{ cfme_service_tempalte_result['json']['resources'][0] }}"
+    cfme_service_template_id: "{{ cfme_service_template_id }}"
+    cfme_service_template_href: "{{ cfme_api_uri }}/service_templates/{{ cfme_service_template_id }}"
+  vars:
+    cfme_service_template_id: "{{ cfme_service_tempalte_result['json']['resources'][0]['id'] }}"

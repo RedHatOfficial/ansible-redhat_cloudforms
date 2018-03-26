@@ -53,3 +53,20 @@ Performs an update/upgrade of all packages on the CFME appliances and performs a
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
 | cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the update
+
+### smoke-test-service-provision.yml
+Smoke tests Service template provisioning and retirment.
+
+#### Required groups
+* cfme-ui-appliances
+
+#### Options
+| parameter                                 | required | default | comments
+|-------------------------------------------|----------|-------------------------------------------------------------------
+| cfme\_api\_user                           | Yes      |         | API user
+| cfme\_api\_password                       | Yes      |         | API password
+| cfme\_service\_catalog\_name              | Yes      |         | Service Catalog that contains the Service Tempalte to test
+| cfme\_service\_template\_name             | Yes      |         | Service Teamplte to test
+| cfme\_provision\_service\_dialog\_options | Yes      |         | Hash of dialog options to pass to the Service Template creation request
+| cfme\_provision\_service\_retries         | No       | 60      | Number of attempts at waiting for Provision Service task to complete
+| cfme\_provision\_service\_delay           | No       | 60      | Number of seconds between attempts at waiting for Provion Service task to complete

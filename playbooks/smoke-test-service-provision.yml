@@ -1,0 +1,33 @@
+---
+# Smoke tests service creation by creating and then retiring a service.
+#
+# @param cfme_api_user                         API user
+# #param cfme_api_password                     API password
+# @param cfme_service_catalog_name             Name of the Service Catalog to smoek test.
+# @param cfme_service_template_name            Name of the Service Template to smoke test.
+# @param cfme_provision_service_dialog_options Dialog options to use for the smoke test of the Service Template.
+
+- name: CFME | Smoke Test Service Provision
+  gather_facts: True
+  hosts: cfme-ui-appliances[0]
+  tasks:
+    - name: CFME | Smoke Test Service Provision | Validate Variables
+      assert:
+        that:
+          - "cfme_api_user is defined"
+          - "cfme_api_password is defined"
+          - "cfme_service_catalog_name is defined"
+          - "cfme_service_template_name is defined"
+          - "cfme_provision_service_dialog_options is defined"
+
+    - name: CFME | Smoke Test Service Provision | Include API Authenticate Tasks
+      include_tasks: tasks/api-authenticate.yml
+
+    - name: CFME | Smoke Test Service Provision | Include Get Service Teamplate Tasks
+      include_tasks: tasks/get-service-template.yml
+
+    - name: CFME | Smoke Test Service Provision | Include Provision Service Tasks
+      include_tasks: tasks/provision-service.yml
+
+    - name: CFME | Smoke Test Service Provision | Include Retire Service Tasks
+      include_tasks: tasks/retire-service.yml

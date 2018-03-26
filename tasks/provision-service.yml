@@ -1,0 +1,66 @@
+---
+# @param cfme_api_uri               URI to the CFME API to get the Service Teamplate from
+# @param cfme_auth_token            Auth token to authenticate with CFME with
+# @param cfme_service_catalog_id    ID of the Service Catalog that contains the requested Service Teamplate
+# @param cfme_service_template_href HREF for the Service Teamplte
+# @param cfme_provision_service_dialog_options
+#                                   Dialog options to use when creating the Service Provision request
+#
+# @set cfme_service_provision_request_id ID of the Service Provison request that was created and finished
+# @set cfme_service_ids                  IDs of the Service(s) created by the created requeste
+
+- name: CFME | Provision Service | Validate Variables
+  assert:
+    that:
+      - "cfme_api_uri is defined"
+      - "cfme_auth_token is defined"
+      - "cfme_service_catalog_id is defined"
+      - "cfme_service_template_href is defined"
+      - "cfme_provision_service_dialog_options is defined"
+
+- name: CFME | Provision Service | Create Service Provision Request
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/service_catalogs/{{ cfme_service_catalog_id }}/service_templates"
+    method: POST
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+    timeout: 120
+    body_format: 'json'
+    body:
+      action: "order"
+      resource: "{{ cfme_provision_service_dialog_options | combine({ 'href': cfme_service_template_href }) }}"
+  register: cfme_provision_request_result
+
+- name: CFME | Provision Service | Set Service Provision Request ID
+  set_fact:
+    cfme_service_provision_request_id: "{{ cfme_provision_request_result['json']['results'][0]['id'] }}"
+
+- name: CFME | Provision Service | Wait for Provision Service Request to Finish
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/service_requests/{{ cfme_service_provision_request_id }}?expand=tasks"
+    method: GET
+    validate_certs: False
+    headers:
+      accept: 'json'
+      x-auth-token: "{{ cfme_auth_token }}"
+  register: cfme_service_provision_request_status_result
+  until: cfme_service_provision_request_status_result['json']['request_state'] == 'finished'
+  retries: "{{ cfme_provision_service_retries | default(60) }}"
+  delay: "{{ cfme_provision_service_delay | default(60) }}"
+
+- name: CFME | Provision Service | Verify Service Provision Finished with State of Ok
+  assert:
+    that:
+      - "cfme_service_provision_request_status_result['json']['request_state'] == 'finished'"
+      - "cfme_service_provision_request_status_result['json']['status'] == 'Ok'"
+    msg: "Service Provision Request State <{{ cfme_service_provision_request_status_result['json']['request_state'] }}> must be 'finished' with a Status <{{ cfme_service_provision_request_status_result['json']['status'] }}> of 'Ok'. {{ cfme_service_provision_request_status_result['json']['message'] }}"
+
+- name: CFME | Provision Service | Set Provisioned Service Facts
+  set_fact:
+    cfme_service_ids: "{{ cfme_service_provision_request_status_result['json'] | json_query(query) | unique }}"
+  vars:
+    query: "tasks[?destination_type=='Service'].destination_id"

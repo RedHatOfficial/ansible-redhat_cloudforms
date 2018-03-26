@@ -1,0 +1,32 @@
+---
+# @param cfme_api_user     User to get auth token for to use for API calls
+# @param cfme_api_password Password for given user to get auth token for API calls for
+#
+# @set cfme_api_uri    URI to use for API calls
+# @set cfme_auth_token Authentication token to use for API calls
+
+- name: CFME | API Authenticate | Validate Variables
+  assert:
+    that:
+      - "cfme_api_user is defined"
+      - "cfme_api_password is defined"
+
+- name: CFME | API Authenticate | Set API URI
+  set_fact:
+    cfme_api_uri: "https://{{ inventory_hostname }}/api"
+
+- name: CFME | API Authenticate | Authenticate
+  local_action:
+    module: uri
+    url: "{{ cfme_api_uri }}/auth"
+    method: GET
+    validate_certs: False
+    user: "{{ cfme_api_user }}"
+    password: "{{ cfme_api_password }}"
+    headers:
+      accept: 'json'
+  register: cfme_auth_result
+
+- name: CFME | API Authenticate | Set Auth Token
+  set_fact:
+    cfme_auth_token: "{{ cfme_auth_result['json']['auth_token'] }}"
