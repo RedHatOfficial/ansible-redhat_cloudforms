@@ -1,0 +1,20 @@
+---
+- name: CFME | Stop Services | Appliances
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Stop Services | EVM
+      service:
+        name: evmserverd
+        state: stopped
+
+- name: CFME | Stop Services | Databases
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Stop Services | PostgreSQL
+      service:
+        name: rh-postgresql95-postgresql
+        state: stopped

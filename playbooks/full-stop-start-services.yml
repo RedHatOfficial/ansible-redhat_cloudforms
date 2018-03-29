@@ -1,0 +1,8 @@
+---
+- name: CFME | Full Stop / Start Services | Gather Facts
+  hosts: all
+  gather_facts: True
+
+- import_playbook: stop-services.yml
+- import_playbook: start-services.yml
+- import_playbook: health-check.yml

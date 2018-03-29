@@ -1,0 +1,20 @@
+---
+- name: CFME | Start Services | Databases
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Start Services | PostgreSQL
+      service:
+        name: rh-postgresql95-postgresql
+        state: started
+
+- name: CFME | Start Services | Appliances
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Start Services | EVM
+      service:
+        name: evmserverd
+        state: started
