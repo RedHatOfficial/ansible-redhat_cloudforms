@@ -62,7 +62,7 @@ Smoke tests Service template provisioning and retirment.
 
 #### Options
 | parameter                                 | required | default | comments
-|-------------------------------------------|----------|-------------------------------------------------------------------
+|-------------------------------------------|----------|---------|----------------------------------------------------------
 | cfme\_api\_user                           | Yes      |         | API user
 | cfme\_api\_password                       | Yes      |         | API password
 | cfme\_service\_catalog\_name              | Yes      |         | Service Catalog that contains the Service Tempalte to test
