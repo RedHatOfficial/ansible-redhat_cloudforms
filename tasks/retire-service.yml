@@ -37,5 +37,5 @@
   register: cfme_services_status_result
   with_items: "{{ cfme_service_ids }}"
   until: cfme_services_status_result['json']['retired'] == true
-  retries: 60
-  delay: 60
+  retries: "{{ cfme_retire_service_retries | default(60) }}"
+  delay: "{{ cfme_retire_service_delay | default(60) }}"

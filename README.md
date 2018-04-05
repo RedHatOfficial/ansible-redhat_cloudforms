@@ -70,6 +70,8 @@ Smoke tests Service template provisioning and retirment.
 | cfme\_provision\_service\_dialog\_options | Yes      |         | Hash of dialog options to pass to the Service Template creation request
 | cfme\_provision\_service\_retries         | No       | 60      | Number of attempts at waiting for Provision Service task to complete
 | cfme\_provision\_service\_delay           | No       | 60      | Number of seconds between attempts at waiting for Provion Service task to complete
+| cfme\_retire\_service\_retries            | No       | 60      | Number of attempts at waiting for Retire Service task to complete
+| cfme\_retire\_service\_delay              | No       | 60      | Number of seconds between attempts at waiting for Retire Service task to complete
 
 ### start-services.yml
 Start all of the DB services then all of the Appliance services.
