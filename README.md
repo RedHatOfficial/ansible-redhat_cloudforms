@@ -99,3 +99,20 @@ Checks the health of the Appliances.
 
 #### Required groups
 * cfme-appliancees
+
+### gather-logs.yml
+Gathers relevant logs from all of the appliances and puts them in an archive on the first DB host. Optionally emails the archive.
+
+#### Required groups
+* cfme-databases
+
+#### Options
+| parameter                                 | required | default | comments
+|-------------------------------------------|----------|-------------------------------------------------------------------
+| cfme\_gather\_logs\_smtp\_host            | No       |         | SMTP host to send log archive email through. If not specified no email will be sent.
+| cfme\_gather\_logs\_smtp\_port            | No       |         | SMTP port to send log archive email through. If not specified no em
+    ail will be sent.
+| cfme\_gather\_logs\_email\_from           | No       |         | Email addresses to send the log archive email from. If not specified no em
+    ail will be sent.
+| cfme\_gather\_logs\_email\_to             | No       |         | Email addresses to send the log archive email to. If not specified no em
+    ail will be sent.

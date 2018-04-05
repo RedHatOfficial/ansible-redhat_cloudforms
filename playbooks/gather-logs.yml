@@ -1,0 +1,84 @@
+- name: CFME | Gather Logs
+  hosts: all
+  gather_facts: True
+  tasks:
+    - name: CFME | Gather Logs | Set destination host
+      set_fact:
+        cfme_gather_logs_destination_host: "{{ groups['cfme-databases'][0] }}"
+
+    - name: CFME | Gather Logs | Get destionation public key
+      slurp:
+        src: '~/.ssh/id_rsa.pub'
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      register: cfme_destination_pub_key
+
+    - name: CFME | Gather Logs | Add destination public key as authorized key
+      authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        validate_certs: False
+        key: "{{ cfme_destination_pub_key['content'] | b64decode }}"
+
+    - name: CFME | Gather Logs | Determine destination dir
+      set_fact:
+        cfme_gather_logs_destination_dir: "/tmp/ansible-cfme-gather-logs_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}{{ ansible_date_time.second }}"
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      run_once: True
+
+    - name: CFME | Gather Logs | Set destination dir
+      set_fact:
+        cfme_gather_logs_destination_dir: "{{ hostvars[cfme_gather_logs_destination_host]['cfme_gather_logs_destination_dir'] }}"
+
+    - name: CFME | Gather Logs | Create destination directory
+      file:
+        path: "{{ cfme_gather_logs_destination_dir }}"
+        state: directory
+        mode: 0777
+        recurse: True
+      run_once: True
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      become: True
+
+    - name: CFME | Gather Logs | Syncronize logs
+      synchronize:
+        mode: pull
+        archive: No
+        src: "/var/www/miq/vmdb/log/{{ item }}"
+        dest: "{{ cfme_gather_logs_destination_dir }}/{{ item }}-{{ inventory_hostname }}"
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      with_items:
+        - evm.log
+        - automation.log
+
+    - name: CFME | Gather Logs | Create archive
+      archive:
+        path: "{{ cfme_gather_logs_destination_dir }}"
+        dest: "{{ cfme_gather_logs_destination_dir }}.tgz"
+      run_once: True
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+
+    - name: CFME | Gather Logs | Send email with logs attached
+      mail:
+        host: "{{ cfme_gather_logs_smtp_host }}"
+        port: "{{ cfme_gather_logs_smtp_port }}"
+        secure: never
+        from: "{{ cfme_gather_logs_email_from }}"
+        to: "{{ cfme_gather_logs_email_to }}"
+        subject: CFME Logs
+        body: "CFME logs gathered from cluster and sent from {{ inventory_hostname }}."
+        attach: "{{ cfme_gather_logs_destination_dir }}.tgz"
+      run_once: True
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      when:
+        - "cfme_gather_logs_smtp_host is defined"
+        - "cfme_gather_logs_smtp_port is defined"
+        - "cfme_gather_logs_email_from is defined"
+        - "cfme_gather_logs_email_to is defined"
+
+    - name: CFME | Gather Logs | Delete destination directory
+      file:
+        path: "{{ cfme_gather_logs_destination_dir }}"
+        state: absent
+      run_once: True
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+      become: True
