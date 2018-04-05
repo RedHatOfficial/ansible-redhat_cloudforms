@@ -2,6 +2,14 @@
   hosts: all
   gather_facts: True
   tasks:
+    - name: CFME | Gather Logs | Set logs to gather
+      set_fact:
+        cfme_gather_logs_list:
+          - evm.log
+          - automation.log
+          - top_output.log
+      when: cfme_gather_logs_list is not defined
+
     - name: CFME | Gather Logs | Set destination host
       set_fact:
         cfme_gather_logs_destination_host: "{{ groups['cfme-databases'][0] }}"
@@ -46,14 +54,18 @@
         src: "/var/www/miq/vmdb/log/{{ item }}"
         dest: "{{ cfme_gather_logs_destination_dir }}/{{ item }}-{{ inventory_hostname }}"
       delegate_to: "{{ cfme_gather_logs_destination_host }}"
-      with_items:
-        - evm.log
-        - automation.log
+      with_items: "{{ cfme_gather_logs_list }}"
 
     - name: CFME | Gather Logs | Create archive
       archive:
         path: "{{ cfme_gather_logs_destination_dir }}"
         dest: "{{ cfme_gather_logs_destination_dir }}.tgz"
+      run_once: True
+      delegate_to: "{{ cfme_gather_logs_destination_host }}"
+
+    - name: CFME | Gather Logs | Archive location
+      debug:
+        msg: "{{ cfme_gather_logs_destination_dir }}.tgz"
       run_once: True
       delegate_to: "{{ cfme_gather_logs_destination_host }}"
 
@@ -74,6 +86,7 @@
         - "cfme_gather_logs_smtp_port is defined"
         - "cfme_gather_logs_email_from is defined"
         - "cfme_gather_logs_email_to is defined"
+      ignore_errors: True
 
     - name: CFME | Gather Logs | Delete destination directory
       file:
