@@ -55,6 +55,7 @@
         dest: "{{ cfme_gather_logs_destination_dir }}/{{ item }}-{{ inventory_hostname }}"
       delegate_to: "{{ cfme_gather_logs_destination_host }}"
       with_items: "{{ cfme_gather_logs_list }}"
+      ignore_errors: True
 
     - name: CFME | Gather Logs | Create archive
       archive:
