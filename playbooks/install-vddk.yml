@@ -41,4 +41,4 @@
 
     - name: CFME | Install VDDK | Run ldconfig
       command: 'ldconfig'
-      when: link_result_one is changed and link_result_two is changed
+      when: link_result_one is changed or link_result_two is changed
