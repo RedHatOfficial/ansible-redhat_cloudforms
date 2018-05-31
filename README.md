@@ -113,3 +113,16 @@ Gathers relevant logs from all of the appliances and puts them in an archive on 
 | cfme\_gather\_logs\_smtp\_port  | No       |         | SMTP port to send log archive email through. If not specified no email will be sent.
 | cfme\_gather\_logs\_email\_from | No       |         | Email addresses to send the log archive email from. If not specified no email will be sent.
 | cfme\_gather\_logs\_email\_to   | No       |         | Email addresses to send the log archive email to. If not specified no email will be sent
+
+### install-vddk.yml
+Installs the VMware Virtual Disk Development Kit (VDDK).  This is required to enable Smart State Analysis (SSA) for VMware hosts.
+
+* You will need a VMware login to download the VDDK.  We do not provide this due to VMware licensing requirements.
+
+#### Options
+| parameter        | required | default | comments
+|------------------|----------|---------|--------------------------------------------------------------------
+| cfme\_vddk\_path | Yes      |         | This is the file path, on the control node, of the downloaded VDDK.
+
+### uninstall-vddk.yml
+Uninstalls the VMware Virtual Disk Development Kit (VDDK).  This can be utilized in conjunction with install-vddk.yml when an upgrade of the VDDK is required.
