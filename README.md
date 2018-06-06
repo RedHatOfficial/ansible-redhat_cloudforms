@@ -22,6 +22,8 @@ Performs a migration from CFME 5.7 to 5.8 utilizing steps from [Migrating to Red
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
 | cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the migration
+| sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
+| sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
 ### migrate-5-8-to-5-9.yml
 Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red Hat CloudForms 4.6](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.6/html/migrating_to_red_hat_cloudforms_4.6/).  This playbook does not currently perform a backup, resize the disks or handle database replication scenarios.
@@ -40,6 +42,8 @@ Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
 | cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the migration
+| sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
+| sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
 ### rolling-update.yml
 Performs an update/upgrade of all packages on the CFME appliances and performs a reboot if necessary.
@@ -53,6 +57,8 @@ Performs an update/upgrade of all packages on the CFME appliances and performs a
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
 | cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the update
+| sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
+| sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
 ### smoke-test-service-provision.yml
 Smoke tests Service template provisioning and retirment.

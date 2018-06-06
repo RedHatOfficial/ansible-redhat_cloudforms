@@ -4,8 +4,13 @@
   become: True
   gather_facts: True
   tasks:
+    - name: CFME | Rolling Update | Include Tasks for Subscribing Using Activation Key
+      include_tasks: tasks/configure-activation-key.yml
+      when: sat6_activation_key is defined
+
     - name: CFME | Rolling Update | Include Tasks for Configuring Repositories
       include_tasks: tasks/configure-repositories.yml
+      when: sat6_activation_key is not defined
 
     - name: CFME | Rolling Update | Any package updates required?
       command: "yum check-update --releasever={{ releasever }}"

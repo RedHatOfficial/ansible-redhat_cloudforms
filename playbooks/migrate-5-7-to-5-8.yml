@@ -3,10 +3,15 @@
   become: True
   gather_facts: True
   tasks:
-    - name: CFME | Migrate | Repositories
+    - name: CFME | Migrate | Subscribe Using Activation Key
+      include_tasks: tasks/configure-activation-key.yml
+      when: sat6_activation_key is defined
+
+    - name: CFME | Migrate | Subscribe Using Repositories
       include_tasks: tasks/configure-repositories.yml
       vars:
         cfme_version_product: 5.8
+      when: sat6_activation_key is not defined
 
 - name: CFME | Migrate | 5.7 to 5.8 | Appliances Specific Preparation
   hosts: cfme-appliances
