@@ -12,10 +12,15 @@
   when: "'cfme-databases' in group_names"
 
 - name: CFME | Update Packages | Latest
-  package:
-    name: '*'
+  command: "yum update -y --releasever={{ releasever }}"
+  when: releasever is defined
+  
+- name: CFME | Update Packages | Latest
+  yum:
+    name: "*"
     state: latest
-    
+  when: releasever is undefined
+  
 - name: CFME | Update Packages | Include Tasks for Host Reboot
   include_tasks: tasks/host-reboot.yml
 

@@ -8,12 +8,22 @@
       include_tasks: tasks/configure-repositories.yml
 
     - name: CFME | Rolling Update | Any package updates required?
-      command: 'yum check-update'
+      command: "yum check-update --releasever={{ releasever }}"
       args:
         warn: no
       register: packages_need_update_result
       changed_when: packages_need_update_result.rc == 100
       failed_when: packages_need_update_result.rc != 0 and packages_need_update_result.rc != 100
+      when: releasever is defined
+
+    - name: CFME | Rolling Update | Any package updates required?
+      command: "yum check-update"
+      args:
+        warn: no
+      register: packages_need_update_result
+      changed_when: packages_need_update_result.rc == 100
+      failed_when: packages_need_update_result.rc != 0 and packages_need_update_result.rc != 100
+      when: releasever is undefined
 
 - name: CFME | Rolling Update | Update Databases
   hosts: cfme-databases
