@@ -132,3 +132,16 @@ Installs the VMware Virtual Disk Development Kit (VDDK).  This is required to en
 
 ### uninstall-vddk.yml
 Uninstalls the VMware Virtual Disk Development Kit (VDDK).  This can be utilized in conjunction with install-vddk.yml when an upgrade of the VDDK is required.
+
+### install-webmks-sdk.yml
+Installs the VMware HTML Console SDK.  This is required to enable WebMKS for VMware Console Support.
+
+* You will need a VMware login to download the SDK.  We do not provide this due to VMware licensing requirements.
+
+#### Options
+| parameter        | required | default | comments
+|------------------|----------|---------|--------------------------------------------------------------------
+| cfme\_webmks_sdk\_path | Yes      |         | This is the file path, on the control node, of the downloaded SDK.
+
+### uninstall-webmks-sdk.yml
+Removes the VMware HTML Console SDK.  This disables  WebMKS for VMware Console Support.

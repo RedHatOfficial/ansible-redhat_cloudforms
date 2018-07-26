@@ -1,0 +1,66 @@
+---
+
+- name: CFME | Install WebMKS SDK
+  hosts: all
+  gather_facts: True
+  tasks:
+
+    - block:
+
+      - name: CFME | Install WebMKS SDK | Create Temp Directory
+        tempfile:
+          state: directory
+          prefix: vmware
+        register: tmp_dir
+
+      - name: CFME | Install WebMKS SDK | Extract WebMKS SDK
+        unarchive:
+          src: "{{ cfme_webmks_sdk_path }}"
+          dest: "{{ tmp_dir['path'] }}"
+
+      - name: CFME | Install WebMKS SDK | Create WebMKS directory
+        file:
+          state: directory
+          path: /var/www/miq/vmdb/public/webmks
+          owner: root
+          group: root
+
+      - name: CFME | Install WebMKS SDK | Sync Folder to /var/www/miq/vmdb/public/
+        synchronize:
+          src:  "{{ tmp_dir['path'] }}/"
+          dest: /var/www/miq/vmdb/public/webmks
+        delegate_to: "{{ inventory_hostname }}"
+
+      - name: CFME | Install WebMKS SDK | Enforce Correct Directory Permissions
+        file:
+          state: directory
+          path: "{{ item }}"
+          mode: 'a+rx'
+        loop:
+          - /var/www/miq/vmdb/public/webmks
+          - /var/www/miq/vmdb/public/webmks/css
+          - /var/www/miq/vmdb/public/webmks/img
+
+      - name: CFME | Install WebMKS SDK | Enforce Correct File Permissions
+        file:
+          state: directory
+          path: /var/www/miq/vmdb/public/webmks
+          mode: 'a+r'
+          recurse: yes
+
+      rescue:
+
+      - debug:
+          msg: 'WebMKS installation failed. Removing any WebMKS assets installed.'
+
+      - name: CFME | Install WebMKS SDK | Remove WebMKS Assets on Failure
+        file:
+          state: absent
+          path: /var/www/miq/vmdb/public/webmks
+
+      always:
+
+      - name: CFME | Install WebMKS SDK | Clean Up /tmp
+        file:
+          path: "{{ tmp_dir['path'] }}"
+          state: absent

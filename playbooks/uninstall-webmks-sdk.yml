@@ -1,0 +1,12 @@
+---
+
+- name: CFME | Remove WebMKS SDK
+  hosts: all
+  gather_facts: False
+  tasks:
+
+    - name: CFME | Remove WebMKS SDK | Remove WebMKS Assets
+      file:
+        state: absent
+        path: /var/www/miq/vmdb/public/webmks
+
