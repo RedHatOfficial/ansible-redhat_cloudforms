@@ -31,22 +31,12 @@
           dest: /var/www/miq/vmdb/public/webmks
         delegate_to: "{{ inventory_hostname }}"
 
-      - name: CFME | Install WebMKS SDK | Enforce Correct Directory Permissions
-        file:
-          state: directory
-          path: "{{ item }}"
-          mode: 'a+rx'
-        loop:
-          - /var/www/miq/vmdb/public/webmks
-          - /var/www/miq/vmdb/public/webmks/css
-          - /var/www/miq/vmdb/public/webmks/img
-
-      - name: CFME | Install WebMKS SDK | Enforce Correct File Permissions
+      - name: CFME | Install WebMKS SDK | Enforce Correct File and Directory Permissions
         file:
           state: directory
           path: /var/www/miq/vmdb/public/webmks
-          mode: 'a+r'
-          recurse: yes
+          mode: 'a+rX'
+          recurse: True
 
       rescue:
 
