@@ -41,7 +41,7 @@
 - name: CFME | Provision Service | Wait for Provision Service Request to Finish
   local_action:
     module: uri
-    url: "{{ cfme_api_uri }}/service_requests/{{ cfme_service_provision_request_id }}?expand=tasks,request_tasks"
+    url: "{{ cfme_api_uri }}/service_requests/{{ cfme_service_provision_request_id }}?expand=request_tasks"
     method: GET
     validate_certs: False
     headers:
@@ -63,4 +63,4 @@
   set_fact:
     cfme_service_ids: "{{ cfme_service_provision_request_status_result['json'] | json_query(query) | unique }}"
   vars:
-    query: "tasks[?destination_type=='Service'].destination_id"
+    query: "request_tasks[?destination_type=='Service'].destination_id"
