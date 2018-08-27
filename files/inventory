@@ -1,0 +1,45 @@
+[cfme:children]
+cfme-databases
+cfme-appliances
+
+# All applicances which are running evmserverd including database appliances which are not standalone.
+# Do not include HA / standalone databasees which are not running evmserverd here.
+[cfme-appliances]
+cfmedb01 # Application running on database appliance.
+cfmeui01
+cfmeui02
+cfmewk01
+cfmewk02
+cfmewk03
+
+# Any appliance with VMDB database running.
+# HA / standalone or VMDB with application running too.
+[cfme-databases]
+cfmedb01 # Application running on database appliance.
+cfmehadb01 # HA database
+cfmehadb02 # HA database
+cfmehadb03 # HA database
+
+[all:vars]
+#cfme_additional_repositories=some-repo
+sat6_org_id=Example_Org
+sat6_activation_key=content_view-cf46,host_collection-cloudforms
+
+#cfme_api_user=admin
+#cfme_api_password=smartvm
+#cfme_service_catalog_name=
+#cfme_service_template_name=
+#cfme_provision_service_dialog_options=
+#cfme_provision_service_retries=
+#cfme_provision_service_delay=
+#cfme_retire_service_retries=
+#cfme_retire_service_delay=
+
+#cfme_gather_logs_smtp_host=mail.example.com
+#cfme_gather_logs_smtp_port=25
+#cfme_gather_logs_email_from=cloudforms@example.com
+#cfme_gather_logs_email_to=cloudforms@example.com
+
+#cfme_vddk_path=
+
+#cfme_webmks_sdk_path=

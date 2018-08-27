@@ -1,5 +1,5 @@
 ---
-- name: CFME | Instll Custom Facts | Create /etc/ansible/facts.d
+- name: CFME | Install Custom Facts | Create /etc/ansible/facts.d
   file:
     state: directory
     recurse: True
@@ -14,4 +14,4 @@
 
 - name: CFME | Install Custom Facts | Gather New Facts
   setup:
-  when: cfme_install_custom_facts_result | changed
+  when: cfme_install_custom_facts_result is changed

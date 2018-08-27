@@ -1,5 +1,5 @@
 ---
-- name: CFME | Subscribe Using Activation Key | Incluide Tasks for Installing Custom Facts
+- name: CFME | Subscribe Using Activation Key | Include Tasks for Installing Custom Facts
   include_tasks: tasks/install-custom-facts.yml
 
 - name: CFME | Subscribe Using Activation Key | Re-register Host With New Satellite 6 Activation Key

@@ -38,7 +38,7 @@
   tasks:
     - name: CFME | Rolling Update | Include Tasks for Updating Packages
       include_tasks: tasks/update-packages.yml
-      when: packages_need_update_result | changed
+      when: packages_need_update_result is changed
 
 - name: CFME | Rolling Update | Update Appliances
   hosts: cfme-appliances:!cfme-databases
@@ -48,4 +48,4 @@
   tasks:
     - name: CFME | Rolling Update | Include Tasks for Updating Packages
       include_tasks: tasks/update-packages.yml
-      when: packages_need_update_result | changed
+      when: packages_need_update_result is changed

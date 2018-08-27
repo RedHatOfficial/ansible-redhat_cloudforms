@@ -21,7 +21,7 @@ Performs a migration from CFME 5.7 to 5.8 utilizing steps from [Migrating to Red
 #### Options
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
-| cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the migration
+| cfme_additional_repositories | No       |         |         | Additional repositories to configure when performing the migration
 | sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
 | sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
@@ -41,7 +41,7 @@ Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red
 #### Options
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
-| cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the migration
+| cfme_additional_repositories | No       |         |         | Additional repositories to configure when performing the migration
 | sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
 | sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
@@ -56,7 +56,7 @@ Performs an update/upgrade of all packages on the CFME appliances and performs a
 #### Options
 | parameter                    | required | default | choices | comments
 |------------------------------|----------|---------|---------|-------------------------------------------------------------------
-| cfme_addiitonal_repositories | No       |         |         | Additional repositories to configure when performing the update
+| cfme_additional_repositories | No       |         |         | Additional repositories to configure when performing the update
 | sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
 | sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
@@ -145,3 +145,22 @@ Installs the VMware HTML Console SDK.  This is required to enable WebMKS for VMw
 
 ### uninstall-webmks-sdk.yml
 Removes the VMware HTML Console SDK.  This disables  WebMKS for VMware Console Support.
+
+### change_vmdb_password.yml
+Changes the VMDB PostgreSQL password, updates the database.yml files, and restarts evmserverd.
+
+#### Assumptions
+* vmdb_password is defined in files/vmdb_password.yml which is encrypted using Ansible Vault.
+* The password of the vault is `smartvm`.
+* The password of the vault can be changed with `ansible-vault rekey files/vmdb_password.yml`.
+* The VMDB password to be used can be set by editing the vault with `ansible-vault edit files/vmdb_password.yml`.
+* The playbook can be run with `ansible-playbook --vault-id @prompt playbooks/change_vmdb_password.yml` to prompt for the Ansible Vault password.
+
+#### Required groups
+* cfme-appliancees
+* cfme-databases
+
+#### Options
+| parameter        | required | default | comments
+|------------------|----------|---------|--------------------------------------------------------------------
+| vmdb\_password  | Yes      |         | This is the new password to use for the V.
