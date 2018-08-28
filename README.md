@@ -163,4 +163,4 @@ Changes the VMDB PostgreSQL password, updates the database.yml files, and restar
 #### Options
 | parameter        | required | default | comments
 |------------------|----------|---------|--------------------------------------------------------------------
-| vmdb\_password  | Yes      |         | This is the new password to use for the V.
+| vmdb\_password   | Yes      |         | This is the new password to use for the VMDB PostgreSQL account.
