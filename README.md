@@ -1,5 +1,5 @@
 # ansible-redhat_cloudforms
-Ansible playbooks for Red Hat CloudForms Management Engine (CFME).
+This is a *community supported* repository of ansible playbooks for automating the management of ManageIQ and/or Red Hat CloudForms Management Engine (CFME).
 
 ## Playbooks
 Playbooks provided by this project.
