@@ -53,6 +53,16 @@
         name: rh-postgresql95-postgresql
         state: started
 
+- name: CFME | Migrate | 5.8 to 5.9 | Wait for postgresql
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Wait for postgresql
+      wait_for:
+        port: 5432
+        delay: 120
+
 - name: CFME | Migrate | 5.7 to 5.8 | DB Migration
   hosts: cfme-appliances
   become: True
@@ -60,13 +70,13 @@
   tasks:
     - name: CFME | Migrate | rake db:migrate
       run_once: True
-      shell: "cd /var/www/miq/vmdb; rake db:migrate | tee /var/tmp/rake_db_migrate.out"
+      shell: "cd /var/www/miq/vmdb; rake db:migrate > >(tee /var/tmp/rake_db_migrate.out) 2> >(tee /var/tmp/rake_db_migrate.err >&2)"
       async: 18000
       poll: 60
 
     - name: CFME | Migrate | rake evm:automate:reset
       run_once: True
-      shell: "cd /var/www/miq/vmdb; rake evm:automate:reset | tee /var/tmp/evm_automate_reset.out"
+      shell: "cd /var/www/miq/vmdb; rake evm:automate:reset > >(tee /var/tmp/evm_automate_reset.out) 2> >(tee /var/tmp/evm_automate_reset.err >&2)"
       async: 3600
       poll: 60
 
