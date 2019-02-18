@@ -1,0 +1,13 @@
+---
+- name: CFME | Health Check | Ping Check
+  local_action:
+    module: uri
+    url: "https://{{ ansible_fqdn }}:443/ping"
+    method: GET
+    validate_certs: False
+    body_format: raw
+    return_content: Yes
+  register: cfme_ping_check_result
+  until: cfme_ping_check_result['content'] == 'pong'
+  retries: 60
+  delay: 5

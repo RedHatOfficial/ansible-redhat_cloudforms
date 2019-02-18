@@ -3,15 +3,5 @@
   hosts: cfme-appliances
   gather_facts: True
   tasks:
-    - name: CFME | Health Check | Ping Check
-      local_action:
-        module: uri
-        url: "https://{{ ansible_hostname }}/ping"
-        method: GET
-        validate_certs: False
-        body_format: raw
-        return_content: Yes
-      register: cfme_ping_check_result
-      until: cfme_ping_check_result['content'] == 'pong'
-      retries: 60
-      delay: 5
+    - name: CFME | Health Check | Include Tasks
+      include_tasks: tasks/perform-health-check.yml

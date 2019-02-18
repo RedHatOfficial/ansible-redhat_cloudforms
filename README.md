@@ -164,3 +164,10 @@ Changes the VMDB PostgreSQL password, updates the database.yml files, and restar
 | parameter        | required | default | comments
 |------------------|----------|---------|--------------------------------------------------------------------
 | vmdb\_password   | Yes      |         | This is the new password to use for the VMDB PostgreSQL account.
+
+### disable-medium-ssl-ciphers.yml
+Disables Medium SSL Ciphers in the CloudForms webserver configuration (/etc/httpd/conf.d/manageiq-https-application.conf).
+* Addresses Tenable finding https://www.tenable.com/plugins/nessus/42873
+
+#### Required groups
+* cfme-appliancees

@@ -1,0 +1,31 @@
+---
+- name: CFME | Disable Medium SSL Cipher Suites within CloudForms Configuration
+  hosts: cfme-appliances
+  gather_facts: True
+  handlers:
+    - name: CFME | Restart HTTPD
+      become: True
+      service:
+        name: httpd
+        state: reloaded
+      listen: "Restart HTTPD"
+    - name: CFME | Test HTTPD Port
+      wait_for:
+        port: 80
+        state: started
+      listen: "Restart HTTPD"
+    - name: CFME | Health Check | Include Tasks
+      include_tasks: tasks/perform-health-check.yml
+      listen: "Restart HTTPD"
+  tasks:
+    # Finding https://www.tenable.com/plugins/nessus/42873
+    - name: CFME | Disable Medium SSL Cipher Suites
+      become: True
+      lineinfile:
+        path: /etc/httpd/conf.d/manageiq-https-application.conf
+        regexp: '^SSLCipherSuite |^r"SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:!LOW:!SSLv2:!EXPORT"'
+        line: "SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:!LOW:!SSLv2:!EXPORT"
+        state: present
+        backrefs: True
+        backup: True
+      notify: "Restart HTTPD"
