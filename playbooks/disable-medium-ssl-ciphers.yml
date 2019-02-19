@@ -23,8 +23,8 @@
       become: True
       lineinfile:
         path: /etc/httpd/conf.d/manageiq-https-application.conf
-        regexp: '^SSLCipherSuite |^r"SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:!LOW:!SSLv2:!EXPORT"'
-        line: "SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:!LOW:!SSLv2:!EXPORT"
+        regexp: '^SSLCipherSuite |^r"SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:!MEDIUM:!LOW:!SSLv2:!EXPORT"'
+        line: "SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:!MEDIUM:!LOW:!SSLv2:!EXPORT"
         state: present
         backrefs: True
         backup: True
