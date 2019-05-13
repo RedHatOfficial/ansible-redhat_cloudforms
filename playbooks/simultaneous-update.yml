@@ -1,0 +1,52 @@
+---
+- name: CFME | Update | All Preparation
+  hosts: cfme
+  become: True
+  gather_facts: True
+  tasks:
+    - name: CFME | Update | Include Tasks for Subscribing Using Activation Key
+      include_tasks: tasks/configure-activation-key.yml
+      when: sat6_activation_key is defined
+
+    - name: CFME | Update | Include Tasks for Configuring Repositories
+      include_tasks: tasks/configure-repositories.yml
+      when: sat6_activation_key is not defined
+
+    - name: CFME | Update | Any package updates required?
+      command: "yum check-update --releasever={{ releasever }}"
+      args:
+        warn: no
+      register: packages_need_update_result
+      changed_when: packages_need_update_result.rc == 100
+      failed_when: packages_need_update_result.rc != 0 and packages_need_update_result.rc != 100
+      when: releasever is defined
+
+    - name: CFME | Update | Any package updates required?
+      command: "yum check-update"
+      args:
+        warn: no
+      register: packages_need_update_result
+      changed_when: packages_need_update_result.rc == 100
+      failed_when: packages_need_update_result.rc != 0 and packages_need_update_result.rc != 100
+      when: releasever is undefined
+
+- name: CFME | Update | Update Databases
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Update | Include Tasks for Updating Packages
+      include_tasks: tasks/update-packages.yml
+      when: packages_need_update_result | changed
+
+- name: CFME | Update | Update Appliances
+  hosts: cfme-appliances:!cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Update | Include Tasks for Updating Packages
+      include_tasks: tasks/update-packages.yml
+      when: packages_need_update_result | changed
+
+- name: CFME | Update | wait for API to report ready
+  import_playbook: health-check.yml
