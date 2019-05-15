@@ -20,15 +20,15 @@
       - "cf-me-{{ cfme_version_product }}-for-rhel-7-rpms"
 
 - name: CFME | Configure Repositories | Set Version Specific Repositories
-  set_fact:
+  set_fact
     cfme_version_repositories:
         - rhel-7-server-ansible-2.7-rpms
         - rhel-7-server-rh-common-rpms
-    when: {{ cfme_version_product }} = 5.10
+    when: cfme_version_product == '5.10'
 
 - name: CFME | Configure Repositories | Set Required Repositories
   set_fact:
-    cfme_repositories: "{{ cfme_base_repositories | union ( additional_repos if {{ cfme_version_product }} = 5.10 else [] ) }}"
+    cfme_repositories: "{{ cfme_base_repositories | union ( cfme_version_repositories if cfme_version_product == '5.10' else [] ) }}"
 
 - name: CFME | Configure Repositories | Enable Required Repositories
   command: "subscription-manager repos --enable='{{ item }}'"
