@@ -1,3 +1,4 @@
+---
 - name: CFME | Migrate | 5.9 to 5.10 | All Preparation
   hosts: cfme
   become: True
