@@ -1,4 +1,12 @@
 ---
+
+- name: CFME | Health Check | Port 443 is listening
+  wait_for:
+    host: "{{ ansible_fqdn }}"
+    port: 443
+    state: started
+    timeout: 60
+
 - name: CFME | Health Check | Ping Check
   local_action:
     module: uri
@@ -8,6 +16,7 @@
     body_format: raw
     return_content: Yes
   register: cfme_ping_check_result
-  until: cfme_ping_check_result['content'] == 'pong'
+  until: "cfme_ping_check_result['content'] is defined and cfme_ping_check_result['content'] == 'pong'"
   retries: 60
   delay: 5
+
