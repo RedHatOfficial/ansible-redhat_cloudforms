@@ -45,6 +45,26 @@ Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red
 | sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
 | sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
 
+### migrate-5-9-to-5-10.yml
+Performs a migration from CFME 5.9 to 5.10 utilizing steps from [Migrating to Red Hat CloudForms 4.7](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.7/html/migrating_to_red_hat_cloudforms_4.7/).  This playbook does not currently perform a backup, resize the disks or handle database replication scenarios.
+
+#### Assumptions
+* Appliances have already been backed up per [General Configuration Section 4.4.5.1](https://access.redhat.com/documentation/en-us/red_hat_cloudforms/4.5/html/general_configuration/configuration#backing-up-and-restoring-a-database).
+* Disks have already been resized. (Only necessary if migrating from CFME 5.8.0.17 or earlier)
+* Environments are not utilizing database replication.
+
+#### Required groups
+* cfme
+* cfme-appliancees
+* cfme-databases
+
+#### Options
+| parameter                    | required | default | choices | comments
+|------------------------------|----------|---------|---------|-------------------------------------------------------------------
+| cfme_additional_repositories | No       |         |         | Additional repositories to configure when performing the migration
+| sat6_org_id                  | No       |         |         | Satellite 6 organization ID (when using activation key below)
+| sat6_activation_key          | No       |         |         | Satellite 6 activation key (instead of direct subscribe to repos)
+
 ### rolling-update.yml
 Performs an update/upgrade of all packages on the CFME appliances and performs a reboot if necessary.
 

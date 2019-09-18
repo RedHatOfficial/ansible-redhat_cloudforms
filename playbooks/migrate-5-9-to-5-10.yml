@@ -1,0 +1,113 @@
+---
+- name: CFME | Migrate | 5.9 to 5.10 | All Preparation
+  hosts: cfme
+  become: True
+  gather_facts: True
+  tasks:
+    - name: CFME | Migrate | Subscribe Using Activation Key
+      include_tasks: tasks/configure-activation-key.yml
+      when: sat6_activation_key is defined
+
+    - name: CFME | Migrate | Subscribe Using Repositories
+      include_tasks: tasks/configure-repositories.yml
+      vars:
+        cfme_version_product: '5.10'
+      when: sat6_activation_key is not defined
+
+- name: CFME | Migrate | 5.9 to 5.10 | Appliances Specific Preparation
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Stop evmserverd
+      service:
+        name: evmserverd
+        state: stopped
+
+- name: CFME | Migrate | 5.9 to 5.10 | DB Specific Preparation
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Stop postgres
+      service:
+        name: rh-postgresql95-postgresql
+        state: stopped
+
+- name: CFME | Migrate | 5.9 to 5.10 | Update Packages
+  hosts: cfme
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Update all packages to latest
+      yum:
+        name: '*'
+        state: latest
+
+- name: CFME | Migrate | 5.9 to 5.10 | Start postgresql
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Start postgres
+      service:
+        name: rh-postgresql95-postgresql
+        state: started
+
+- name: CFME | Migrate | 5.9 to 5.10 | Wait for postgresql
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Wait for postgresql
+      wait_for:
+        port: 5432
+        delay: 120
+
+- name: CFME | Migrate | 5.9 to 5.10 | DB Migration
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | rake db:migrate
+      run_once: True
+      shell: |-
+        source /etc/profile.d/evm.sh
+        cd /var/www/miq/vmdb
+        rake db:migrate > >(tee /var/tmp/rake_db_migrate.out) 2> >(tee /var/tmp/rake_db_migrate.err >&2)
+      async: 18000
+      poll: 60
+      args:
+        executable: /bin/bash
+
+    - name: CFME | Migrate | rake evm:automate:reset
+      run_once: True
+      shell: |-
+        source /etc/profile.d/evm.sh
+        cd /var/www/miq/vmdb
+        rake evm:automate:reset > >(tee /var/tmp/evm_automate_reset.out) 2> >(tee /var/tmp/evm_automate_reset.err >&2)
+      args:
+        executable: /bin/bash
+
+- name: CFME | Migrate | 5.9 to 5.10 | Post DB Migrate Restart
+  hosts: cfme-databases
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Restart postgresql
+      service:
+        name: rh-postgresql95-postgresql
+        state: restarted
+
+- name: CFME | Migrate | 5.9 to 5.10 | Restart evmserverd
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+    - name: CFME | Migrate | Restart evmserverd
+      service:
+        name: evmserverd
+        state: restarted
+
+- name: CFME | Migrate | 5.9 to 5.10 | Wait for API to report ready
+  import_playbook: health-check.yml

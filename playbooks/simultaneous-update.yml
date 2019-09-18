@@ -48,5 +48,20 @@
       include_tasks: tasks/update-packages.yml
       when: packages_need_update_result | changed
 
-- name: CFME | Update | wait for API to report ready
+- name: CFME | Update | Wait for API to report ready
   import_playbook: health-check.yml
+
+- name: CFME | Update | Reset MIQ and Red Hat Automate Domains
+  hosts: cfme-appliances
+  become: True
+  gather_facts: False
+  tasks:
+
+    - name: CFME | Update | rake evm:automate:reset
+      run_once: True
+      shell: |-
+        source /etc/profile.d/evm.sh
+        cd /var/www/miq/vmdb
+        rake evm:automate:reset > >(tee /var/tmp/evm_automate_reset.out) 2> >(tee /var/tmp/evm_automate_reset.err >&2)
+      args:
+        executable: /bin/bash
