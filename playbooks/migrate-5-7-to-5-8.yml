@@ -14,7 +14,7 @@
       when: sat6_activation_key is not defined
 
 - name: CFME | Migrate | 5.7 to 5.8 | Appliances Specific Preparation
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -24,7 +24,7 @@
         state: stopped
 
 - name: CFME | Migrate | 5.7 to 5.8 | DB Specific Preparation
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -44,7 +44,7 @@
         state: latest
 
 - name: CFME | Migrate | 5.7 to 5.8 | Start postgresql
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -54,7 +54,7 @@
         state: started
 
 - name: CFME | Migrate | 5.8 to 5.9 | Wait for postgresql
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -64,7 +64,7 @@
         delay: 120
 
 - name: CFME | Migrate | 5.7 to 5.8 | DB Migration
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -81,7 +81,7 @@
       poll: 60
 
 - name: CFME | Migrate | 5.7 to 5.8 | Post DB Migrate Restart
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -91,7 +91,7 @@
         state: restarted
 
 - name: CFME | Migrate | 5.7 to 5.8 | Check Schema
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -113,7 +113,7 @@
         - evm_check_schema
 
 - name: CFME | Migrate | 5.7 to 5.8 | Restart evmserverd
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:

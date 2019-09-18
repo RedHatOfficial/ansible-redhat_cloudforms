@@ -1,6 +1,6 @@
 ---
 - name: CFME | Stop Services | Appliances
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -10,7 +10,7 @@
         state: stopped
 
 - name: CFME | Stop Services | Databases
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:

@@ -9,7 +9,7 @@
 
 - name: CFME | Smoke Test Service Provision
   gather_facts: True
-  hosts: cfme-ui-appliances[0]
+  hosts: cfme_ui_appliances[0]
   tasks:
     - name: CFME | Smoke Test Service Provision | Validate Variables
       assert:

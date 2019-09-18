@@ -1,6 +1,6 @@
 ---
 - name: CFME | Disable Medium SSL Cipher Suites within CloudForms Configuration
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   gather_facts: True
   handlers:
     - name: CFME | Restart HTTPD

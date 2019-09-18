@@ -1,10 +1,10 @@
 [cfme:children]
-cfme-databases
-cfme-appliances
+cfme_databases
+cfme_appliances
 
 # All applicances which are running evmserverd including database appliances which are not standalone.
 # Do not include HA / standalone databasees which are not running evmserverd here.
-[cfme-appliances]
+[cfme_appliances]
 cfmedb01 # Application running on database appliance.
 cfmeui01
 cfmeui02
@@ -14,7 +14,7 @@ cfmewk03
 
 # Any appliance with VMDB database running.
 # HA / standalone or VMDB with application running too.
-[cfme-databases]
+[cfme_databases]
 cfmedb01 # Application running on database appliance.
 cfmehadb01 # HA database
 cfmehadb02 # HA database

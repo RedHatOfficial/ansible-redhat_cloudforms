@@ -1,6 +1,6 @@
 ---
 - name: CFME | Health Check
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   gather_facts: True
   tasks:
     - name: CFME | Health Check | Include Tasks

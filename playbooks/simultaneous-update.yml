@@ -31,28 +31,28 @@
       when: releasever is undefined
 
 - name: CFME | Update | Update Databases
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
     - name: CFME | Update | Include Tasks for Updating Packages
       include_tasks: tasks/update-packages.yml
-      when: packages_need_update_result | changed
+      when: packages_need_update_result is changed
 
 - name: CFME | Update | Update Appliances
-  hosts: cfme-appliances:!cfme-databases
+  hosts: cfme_appliances:!cfme_databases
   become: True
   gather_facts: False
   tasks:
     - name: CFME | Update | Include Tasks for Updating Packages
       include_tasks: tasks/update-packages.yml
-      when: packages_need_update_result | changed
+      when: packages_need_update_result is changed
 
 - name: CFME | Update | Wait for API to report ready
   import_playbook: health-check.yml
 
 - name: CFME | Update | Reset MIQ and Red Hat Automate Domains
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:

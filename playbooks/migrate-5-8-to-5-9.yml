@@ -14,7 +14,7 @@
       when: sat6_activation_key is not defined
 
 - name: CFME | Migrate | 5.8 to 5.9 | Appliances Specific Preparation
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -24,7 +24,7 @@
         state: stopped
 
 - name: CFME | Migrate | 5.8 to 5.9 | DB Specific Preparation
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -44,7 +44,7 @@
         state: latest
 
 - name: CFME | Migrate | 5.8 to 5.9 | Start postgresql
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -54,7 +54,7 @@
         state: started
 
 - name: CFME | Migrate | 5.8 to 5.9 | Wait for postgresql
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -64,7 +64,7 @@
         delay: 120
 
 - name: CFME | Migrate | 5.8 to 5.9 | DB Migration
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
@@ -79,7 +79,7 @@
       shell: "cd /var/www/miq/vmdb; rake evm:automate:reset > >(tee /var/tmp/evm_automate_reset.out) 2> >(tee /var/tmp/evm_automate_reset.err >&2)"
 
 - name: CFME | Migrate | 5.8 to 5.9 | Post DB Migrate Restart
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -89,7 +89,7 @@
         state: restarted
 
 - name: CFME | Migrate | 5.8 to 5.9 | Restart evmserverd
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:

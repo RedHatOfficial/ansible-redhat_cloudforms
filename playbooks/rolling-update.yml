@@ -31,7 +31,7 @@
       when: releasever is undefined
 
 - name: CFME | Rolling Update | Update Databases
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   serial: 1
@@ -41,7 +41,7 @@
       when: packages_need_update_result is changed
 
 - name: CFME | Rolling Update | Update Appliances
-  hosts: cfme-appliances:!cfme-databases
+  hosts: cfme_appliances:!cfme_databases
   become: True
   gather_facts: False
   serial: 1
@@ -54,7 +54,7 @@
   import_playbook: health-check.yml
 
 - name: CFME | Rolling Update | Reset MIQ and Red Hat Automate Domains
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:

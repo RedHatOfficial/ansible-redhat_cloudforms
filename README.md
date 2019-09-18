@@ -15,8 +15,8 @@ Performs a migration from CFME 5.7 to 5.8 utilizing steps from [Migrating to Red
 
 #### Required groups
 * cfme
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter                    | required | default | choices | comments
@@ -35,8 +35,8 @@ Performs a migration from CFME 5.8 to 5.9 utilizing steps from [Migrating to Red
 
 #### Required groups
 * cfme
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter                    | required | default | choices | comments
@@ -55,8 +55,8 @@ Performs a migration from CFME 5.9 to 5.10 utilizing steps from [Migrating to Re
 
 #### Required groups
 * cfme
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter                    | required | default | choices | comments
@@ -70,8 +70,8 @@ Performs an update/upgrade of all packages on the CFME appliances and performs a
 
 #### Required groups
 * cfme
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter                    | required | default | choices | comments
@@ -85,8 +85,8 @@ Performs an update/upgrade of all packages on all CFME appliances at the same ti
 
 #### Required groups
 * cfme
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter                    | required | default | choices | comments
@@ -99,7 +99,7 @@ Performs an update/upgrade of all packages on all CFME appliances at the same ti
 Smoke tests Service template provisioning and retirment.
 
 #### Required groups
-* cfme-ui-appliances
+* cfme_ui_appliances
 
 #### Options
 | parameter                                 | required | default | comments
@@ -118,34 +118,34 @@ Smoke tests Service template provisioning and retirment.
 Start all of the DB services then all of the Appliance services.
 
 #### Required groups
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 ### stop-services.yml
 Stop all of the Appliance services then all of the DB services.
 
 #### Required groups
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 ### full-stop-start-services.yml
 Stop all of the Appliance services, then all of the DB services, then start all of the DB services, then all of the Appliance services, then perform a helath check.
 
 #### Required groups
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 ### health-check.yml
 Checks the health of the Appliances.
 
 #### Required groups
-* cfme-appliancees
+* cfme_appliancees
 
 ### gather-logs.yml
 Gathers relevant logs from all of the appliances and puts them in an archive on the first DB host. Optionally emails the archive.
 
 #### Required groups
-* cfme-databases
+* cfme_databases
 
 #### Options
 | parameter                       | required | default | comments
@@ -192,8 +192,8 @@ Changes the VMDB PostgreSQL password, updates the database.yml files, and restar
 * The playbook can be run with `ansible-playbook --vault-id @prompt playbooks/change_vmdb_password.yml` to prompt for the Ansible Vault password.
 
 #### Required groups
-* cfme-appliancees
-* cfme-databases
+* cfme_appliancees
+* cfme_databases
 
 #### Options
 | parameter        | required | default | comments
@@ -205,4 +205,5 @@ Disables Medium SSL Ciphers in the CloudForms webserver configuration (/etc/http
 * Addresses Tenable finding https://www.tenable.com/plugins/nessus/42873
 
 #### Required groups
-* cfme-appliancees
+* cfme_appliancees
+

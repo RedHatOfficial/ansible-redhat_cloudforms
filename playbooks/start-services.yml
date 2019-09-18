@@ -1,6 +1,6 @@
 ---
 - name: CFME | Start Services | Databases
-  hosts: cfme-databases
+  hosts: cfme_databases
   become: True
   gather_facts: False
   tasks:
@@ -10,7 +10,7 @@
         state: started
 
 - name: CFME | Start Services | Appliances
-  hosts: cfme-appliances
+  hosts: cfme_appliances
   become: True
   gather_facts: False
   tasks:
