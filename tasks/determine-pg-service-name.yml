@@ -1,0 +1,20 @@
+---
+
+# Sets the correct Postgres version based on the CFME Version
+
+- name: CFME | Determine PG Service Name | Determine CFME Version
+  when: "cfme_version_product is undefined"
+  block:
+    - name: CFME | Determine PG Service Name | Install Custom Fact
+      include_tasks: tasks/install-custom-facts.yml
+
+    - name: CFME | Determine PG Service Name | Set CFME Product Version
+      set_fact:
+        cfme_version_product: "{{ ansible_local['cfme']['cfme_version_product'] }}"
+      when: cfme_version_product is not defined
+
+- name: CFME | Determine PG Service Name | Set PG Service Name
+  set_fact:
+    cfme_pg_service_name: "{{ 'postgresql' 
+                               if ( cfme_version_product is version('5.11', '>=') )
+                               else 'rh-postgresql95-postgresql' }}"

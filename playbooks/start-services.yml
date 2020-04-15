@@ -1,4 +1,5 @@
 ---
+
 - name: CFME | Start Services | Databases
   hosts: cfme_databases
   become: True
@@ -6,14 +7,16 @@
   tasks:
     - name: CFME | Start Services | PostgreSQL
       service:
-        name: rh-postgresql95-postgresql
+        name: "{{ cfme_pg_service_name }}"
         state: started
 
 - name: CFME | Start Services | Appliances
   hosts: cfme_appliances
   become: True
-  gather_facts: False
+  gather_facts: True
   tasks:
+    - import_tasks: tasks/determine-pg-service-name.yml
+
     - name: CFME | Start Services | EVM
       service:
         name: evmserverd

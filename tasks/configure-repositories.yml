@@ -11,24 +11,40 @@
     cfme_version_product: "{{ ansible_local['cfme']['cfme_version_product'] }}"
   when: cfme_version_product is not defined
 
-- name: CFME | Configure Repositories | Set Required Base Repositories
-  set_fact:
-    cfme_base_repositories:
-      - rhel-7-server-rpms
-      - rhel-server-rhscl-7-rpms
-      - rhel-7-server-extras-rpms
-      - "cf-me-{{ cfme_version_product }}-for-rhel-7-rpms"
+- name: CFME | Configure repositories | Configure repositories for CF 4.x
+  when: "cfme_version_product is version('5.10', '<=')"
+  block:
 
-- name: CFME | Configure Repositories | Set Version Specific Repositories
-  set_fact:
-    cfme_version_repositories:
-      - rhel-7-server-ansible-2.7-rpms
-      - rhel-7-server-rh-common-rpms
-    when: cfme_version_product == '5.10'
+  - name: CFME | Configure Repositories | Set Required Base Repositories
+    set_fact:
+      cfme_base_repositories:
+        - rhel-7-server-rpms
+        - rhel-server-rhscl-7-rpms
+        - rhel-7-server-extras-rpms
+        - "cf-me-{{ cfme_version_product }}-for-rhel-7-rpms"
 
-- name: CFME | Configure Repositories | Set Required Repositories
-  set_fact:
-    cfme_repositories: "{{ cfme_base_repositories | union ( cfme_version_repositories if cfme_version_product == '5.10' else [] ) }}"
+  - name: CFME | Configure Repositories | Set Version Specific Repositories
+    set_fact:
+      cfme_version_repositories:
+        - rhel-7-server-ansible-2.7-rpms
+        - rhel-7-server-rh-common-rpms
+      when: cfme_version_product == '5.10'
+
+  - name: CFME | Configure Repositories | Set Required Repositories
+    set_fact:
+      cfme_repositories: "{{ cfme_base_repositories | union ( cfme_version_repositories if cfme_version_product == '5.10' else [] ) }}"
+
+- name: CFME | Configure repositories | Configure repositories for CF 5.x
+  when: "cfme_version_product is version('5.11', '>=')"
+  block:
+
+  - name: CFME | Configure Repositories | Set Required Base Repositories
+    set_fact:
+      cfme_repositories:
+        - cfme-5.11-for-rhel-8-x86_64-rpms
+        - ansible-2.9-for-rhel-8-x86_64-rpms
+        - rhel-8-for-x86_64-baseos-rpms
+        - rhel-8-for-x86_64-appstream-rpms
 
 - name: CFME | Configure Repositories | Enable Required Repositories
   command: "subscription-manager repos --enable='{{ item }}'"

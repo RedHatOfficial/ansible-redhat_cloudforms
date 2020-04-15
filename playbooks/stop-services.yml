@@ -1,4 +1,5 @@
 ---
+
 - name: CFME | Stop Services | Appliances
   hosts: cfme_appliances
   become: True
@@ -12,9 +13,11 @@
 - name: CFME | Stop Services | Databases
   hosts: cfme_databases
   become: True
-  gather_facts: False
+  gather_facts: True
   tasks:
+    - import_tasks: tasks/determine-pg-service-name.yml
+
     - name: CFME | Stop Services | PostgreSQL
       service:
-        name: rh-postgresql95-postgresql
+        name: "{{ cfme_pg_service_name }}"
         state: stopped

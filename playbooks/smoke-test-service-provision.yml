@@ -2,7 +2,7 @@
 # Smoke tests service creation by creating and then retiring a service.
 #
 # @param cfme_api_user                         API user
-# #param cfme_api_password                     API password
+# @param cfme_api_password                     API password
 # @param cfme_service_catalog_name             Name of the Service Catalog to smoek test.
 # @param cfme_service_template_name            Name of the Service Template to smoke test.
 # @param cfme_provision_service_dialog_options Dialog options to use for the smoke test of the Service Template.

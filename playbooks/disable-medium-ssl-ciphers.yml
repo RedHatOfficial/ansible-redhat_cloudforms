@@ -29,3 +29,7 @@
         backrefs: True
         backup: True
       notify: "Restart HTTPD"
+      # Do not run this on CF 5.11 and greater due to change in crypto in RHEL 8
+      when: "cfme_version_product is version('5.11', '<')"
+      vars:
+        cfme_version_product: "{{ ansible_local['cfme']['cfme_version_product'] }}"

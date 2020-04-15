@@ -1,4 +1,7 @@
 ---
+
+- import_tasks: tasks/determine-pg-service-name.yml
+
 - name: CFME | Update Packages | Stop evmserverd
   service:
     name: evmserverd
@@ -7,7 +10,7 @@
 
 - name: CFME | Update Packages | Stop postgres
   service:
-    name: rh-postgresql95-postgresql
+    name: "{{ cfme_pg_service_name }}"
     state: stopped
   when: "'cfme-databases' in group_names"
 
@@ -26,7 +29,7 @@
 
 - name: CFME | Update Packages | Start postgres
   service:
-    name: rh-postgresql95-postgresql
+    name: "{{ cfme_pg_service_name }}"
     state: started
   when: "'cfme-databases' in group_names"
 
